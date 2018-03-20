@@ -112,18 +112,9 @@ public class Graph<E>{
 	}
 	public void removeEdge(Vertex<E> src,Vertex<E> dest)
 	{
-		Iterator<Edge<E>> iterator= src.connections.iterator();
-		while(iterator.hasNext()) {	
-			if(iterator.next().end.equals(dest)) {
-				iterator.remove();
-			}
-		}
-		iterator= dest.connections.iterator();
-		while(iterator.hasNext()) {	
-			if(iterator.next().start.equals(src)) {
-				iterator.remove();
-			}
-		}
+		Edge<E> tempEdge = new Edge<E>(src,dest,0);
+		src.connections.remove(tempEdge);
+		dest.connections.remove(tempEdge);
 	}
 //	void DFSTraverse();
 //	void BFSTraverse();
