@@ -1,3 +1,4 @@
+import java.util.ListIterator;
 
 public class Demo {
 
@@ -20,6 +21,19 @@ public class Demo {
 		System.out.println(graph.nextAdjVex(graph.getVex(5),graph.firstAdjVex(graph.getVex(5))));
 		System.out.println(graph.nextAdjVex(graph.getVex(5),graph.getVex(3)));
 		System.out.println(graph.getVex(2));
+		EdgeList<Integer> test = new EdgeList<Integer>();
+		test.add(new Edge<Integer>(graph.getVex(4), graph.getVex(2), 4));
+		test.add(new Edge<Integer>(graph.getVex(7), graph.getVex(5), 4));
+		test.add(new Edge<Integer>(graph.getVex(5), graph.getVex(6), 4));
+		test.add(new Edge<Integer>(graph.getVex(0), graph.getVex(5), 4));
+		test.add(new Edge<Integer>(graph.getVex(1), graph.getVex(5), 4));
+		test.remove(2);
+		ListIterator<Edge<Integer>> eit = test.listIterator();
+		while(eit.hasNext()) {
+			eit.next();
+		}
+		System.out.println(test);
+		System.out.println(test.last.prev);
 	}
 
 }
