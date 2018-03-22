@@ -1,11 +1,10 @@
-import java.util.ArrayList;
 
 public class Vertex<E> {
 	public E data;
-	public ArrayList<Edge<E>> connections;
+	public EdgeList<E> connections;
 	public Vertex(E data) {
 		this.data = data;
-		connections = new ArrayList<Edge<E>>();
+		connections = new EdgeList<E>();
 	}
 	@Override
 	public String toString() {

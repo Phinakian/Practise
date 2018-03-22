@@ -23,7 +23,7 @@ public class Graph<E> {
 	 */
 	public Vertex<E> firstAdjVex(Vertex<E> vex) {
 		if (vertexes.contains(vex)) {
-			for(Edge<E> edge:getVex(vex).connections) {
+			for(Edge<E> edge : getVex(vex).connections) {
 				if (edge.start.equals(vex)) {
 					return edge.end;
 				}
@@ -60,9 +60,10 @@ public class Graph<E> {
 	}
 
 	public Vertex<E> getVex(Vertex<E> vex) {
-		for(Vertex<E> tempVex:vertexes) {
-			if(tempVex.equals(vex)) {
-				return tempVex;
+		ListIterator<Vertex<E>> iterator = vertexes.listIterator();
+		while(iterator.hasNext()) {
+			if(iterator.next().equals(vex)) {
+				return iterator.previous();
 			}
 		}
 		return null;

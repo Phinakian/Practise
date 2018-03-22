@@ -6,12 +6,12 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 public class EdgeList<E> implements List<Edge<E>> {
-	private int size;
-	private int modCount;
+	private int size = 0;
+	private int modCount = 0;
 	Node<E> head;
 	Node<E> last;
 	
-	static class Node<E> {
+	private static class Node<E> {
 		Edge<E> edge;
 		Node<E> next;
 		Node<E> prev;
@@ -76,8 +76,12 @@ public class EdgeList<E> implements List<Edge<E>> {
 				throw new ConcurrentModificationException();
 			}
 			if(hasPrevious()) {
+				if(cursor == null) {
+					cursor = last;
+				} else {
+					cursor = cursor.prev;
+				}
 				lastNode = cursor;
-				cursor = cursor.prev;
 				nextIndex--;
 				return lastNode.edge;
 			} else {
@@ -123,7 +127,7 @@ public class EdgeList<E> implements List<Edge<E>> {
 		
 		@Override
 		public void set(Edge<E> e) {
-			if (lastNode == null) {
+			if(lastNode == null) {
                 throw new IllegalStateException();
 			}
 			if(modCount != expectedModCount) {
@@ -149,13 +153,6 @@ public class EdgeList<E> implements List<Edge<E>> {
 			modCount++;
 			expectedModCount++;
 		}	
-	}
-	
-	public EdgeList() {
-		this.size = 0;
-		head = null;
-		this.last = null;
-		this.modCount = 0;
 	}
 	
 	private Node<E> getNode(int index) {
@@ -195,7 +192,7 @@ public class EdgeList<E> implements List<Edge<E>> {
 		Object[] result = new Object[size];
 		int i = 0;
 		Node<E> node = head;
-		while(node.next != null) {
+		while(node != null) {
 			result[i] = node.edge;
 			i++;
 			node = node.next;
@@ -211,24 +208,20 @@ public class EdgeList<E> implements List<Edge<E>> {
 	
 	@Override
 	public boolean add(Edge<E> edge) {
-		if(edge == null) {
-			throw new NullPointerException();
+		if(head == null) {
+			head = new Node<E>(edge,null,null);
+			last = head;
 		} else {
-			if(head == null) {
-				head = new Node<E>(edge,null,null);
-				last = head;
-				} else {
-				Node<E> tempNode = head;
-				while(tempNode.next != null) {
-					tempNode = tempNode.next;
-				}
-				tempNode.next = new Node<E>(edge,tempNode,null);
-				last = tempNode.next;
+			Node<E> tempNode = head;
+			while(tempNode.next != null) {
+				tempNode = tempNode.next;
 			}
-			size++;
-			modCount++;
-			return true;
+			tempNode.next = new Node<E>(edge,tempNode,null);
+			last = tempNode.next;
 		}
+		size++;
+		modCount++;
+		return true;
 	}
 	
 	@Override
@@ -286,11 +279,10 @@ public class EdgeList<E> implements List<Edge<E>> {
 	@Override
 	public boolean addAll(int index, Collection<? extends Edge<E>> c) {
 		Object[] arr = c.toArray();
-//		int collectionSize = arr.length;
 		if(arr.length == 0) {
 			return false;
 		}
-		if(arr.length == size) {
+		if(index == size) {
 			for(int i = 0; i < arr.length; i++) {
 				add((Edge<E>)arr[i]);
 			}
@@ -357,9 +349,6 @@ public class EdgeList<E> implements List<Edge<E>> {
 	
 	@Override
 	public void add(int index, Edge<E> edge) {
-		if(edge == null) {
-			throw new NullPointerException();
-		}
 		if(index == size) {
 			add(edge);
 		} else {
@@ -398,13 +387,15 @@ public class EdgeList<E> implements List<Edge<E>> {
 		if(o == null) {
 			throw new NullPointerException();
 		} else {
-			int index = 0;
-			Node<E> tempNode;
-			for(tempNode = head;tempNode.next != null;tempNode = tempNode.next) {
-				if(tempNode.edge.equals(o)) {
-					return index;
+			if(!isEmpty()) {
+				int index = 0;
+				Node<E> tempNode;
+				for (tempNode = head; tempNode.next != null; tempNode = tempNode.next) {
+					if(tempNode.edge.equals(o)) {
+						return index;
+					}
+					index++;
 				}
-				index++;
 			}
 			return -1;
 		}
@@ -444,6 +435,10 @@ public class EdgeList<E> implements List<Edge<E>> {
 			result.add(getNode(i).edge);
 		}
 		return result;
+	}
+	@Override
+	public String toString() {
+		return super.toString();
 	}
 	
 }
